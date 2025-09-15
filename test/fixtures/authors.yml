@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  auth_fname: MyString
+  auth_surname: MyString
+  birthyear: 1
+  deathyear: 1
+  biography: MyText
+
+two:
+  auth_fname: MyString
+  auth_surname: MyString
+  birthyear: 1
+  deathyear: 1
+  biography: MyText
