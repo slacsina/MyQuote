@@ -1,9 +1,18 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
+  before_action :require_login, except: [:new, :create]
 
   # GET /users or /users.json
   def index
-    @users = User.all
+    # @users = User.all
+    if logged_in? && is_administrator?
+      @users = User.all
+    elsif logged_in? && !is_administrator?
+      redirect_to userhome_path
+    else
+      flash[:error] = "You are not authorised to access this resource"
+      redirect_to login_path
+    end
   end
 
   # GET /users/1 or /users/1.json
@@ -25,7 +34,8 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to @user, notice: "User was successfully created." }
+        # format.html { redirect_to user_url(@user), notice: "User was successfully created." }
+        format.html { redirect_to login_path, notice: "Sign up successful. Please log in." }
         format.json { render :show, status: :created, location: @user }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +48,7 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to @user, notice: "User was successfully updated.", status: :see_other }
+        format.html { redirect_to user_url(@user), notice: "User was successfully updated." }
         format.json { render :show, status: :ok, location: @user }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -49,10 +59,10 @@ class UsersController < ApplicationController
 
   # DELETE /users/1 or /users/1.json
   def destroy
-    @user.destroy!
+    @user.destroy
 
     respond_to do |format|
-      format.html { redirect_to users_path, notice: "User was successfully destroyed.", status: :see_other }
+      format.html { redirect_to users_url, notice: "User was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -60,11 +70,11 @@ class UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params.expect(:id))
+      @user = User.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.expect(user: [ :fname, :surname, :email, :password_digest, :is_admin, :status ])
+      params.require(:user).permit(:fname, :surname, :email, :password, :is_admin, :status)
     end
 end

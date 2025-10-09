@@ -1,9 +1,10 @@
 class QuotesController < ApplicationController
   before_action :set_quote, only: %i[ show edit update destroy ]
+  before_action :require_login, except: [:index, :show]
 
   # GET /quotes or /quotes.json
   def index
-    @quotes = Quote.all
+    @quotes = current_user.quotes
   end
 
   # GET /quotes/1 or /quotes/1.json
@@ -13,6 +14,8 @@ class QuotesController < ApplicationController
   # GET /quotes/new
   def new
     @quote = Quote.new
+    8.times { @quote.quote_categories.build }  # Give the form eight (8) quote category fields which will be enough for the purposes of our prototype
+    @quote.build_author
   end
 
   # GET /quotes/1/edit
@@ -65,6 +68,7 @@ class QuotesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def quote_params
-      params.expect(quote: [ :textbody, :pubyear, :comment, :is_public, :user_id, :author_id ])
+      params.require(:quote).permit(:textbody, :pubyear, :comment, :is_public, :user_id, :author_id, quote_categories_attributes: [:id, :category_id],
+      author_attributes: [:id, :auth_fname, :auth_surname, :birthyear, :deathyear, :biography])
     end
 end

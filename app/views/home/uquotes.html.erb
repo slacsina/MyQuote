@@ -1,13 +1,10 @@
-<p style="color: green"><%= notice %></p>
-<h1>Welcome to MyQuote</h1>
-<p>Enjoy!</p>
-<h2>Recently Added Quotes</h2>
+<h3>Your Quotes</h3>
 <hr />
 <% @quotes.each do |quote| %>
     <div class="card bg-body-tertiary" style="margin-bottom:10px">
     <div class="card-body">
-      <h4 class="card-title">Quote ID: <%= quote.id %></h4>
+      <h4 class="card-title"><%= quote.id %></h4>
       <p class="card-text"><%= quote.textbody %><br />[<a href="/quotes/<%= quote.id %>">Read full quote</a>]</p>
     </div>
     </div>
-  <% end %>
+<% end %>
