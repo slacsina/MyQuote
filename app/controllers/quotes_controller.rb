@@ -21,6 +21,7 @@ class QuotesController < ApplicationController
 
   # GET /quotes/1/edit
   def edit
+    @quote.build_author if @quote.author.nil? #Copilot helped me figure out i needed to add this to allow users to add Author details if there isn't already one associated
   end
 
   # POST /quotes or /quotes.json
