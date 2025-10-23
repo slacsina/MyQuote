@@ -1,9 +1,9 @@
 class SessionsController < ApplicationController
 
-    def new
+    def new #displays login page
     end
 
-    def create
+    def create #handles login process
       user = User.find_by(email: params[:email])
       if user && user.authenticate(params[:password]) && user.status == "Active"
         session[:user_id] = user.id
@@ -21,7 +21,7 @@ class SessionsController < ApplicationController
       end
     end
 
-    def destroy
+    def destroy #handles logout process
       session[:user_id] = nil
       redirect_to root_path, notice: "Logged out successfully!"
     end

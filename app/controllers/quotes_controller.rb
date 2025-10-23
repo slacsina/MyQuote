@@ -1,6 +1,7 @@
 class QuotesController < ApplicationController
   before_action :set_quote, only: %i[ show edit update destroy ]
-  before_action :require_login, except: [:index, :show]
+  before_action :require_login, except: [:index, :show] #ensures user is logged in to add or edit quotes
+  before_action :check_owner, only: %i[ edit update destroy ] #ensures users can only edit, update or destroy records they own
 
   # GET /quotes or /quotes.json
   def index
@@ -31,6 +32,8 @@ class QuotesController < ApplicationController
         format.html { redirect_to @quote, notice: "Quote was successfully created." }
         format.json { render :show, status: :created, location: @quote }
       else
+        8.times { @quote.quote_categories.build } #
+        @quote.build_author #Copilot helped me figure out I had to re-add the two builds to ensure the form reloads properly when failing to save a new record
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @quote.errors, status: :unprocessable_entity }
       end
@@ -70,5 +73,13 @@ class QuotesController < ApplicationController
     def quote_params
       params.require(:quote).permit(:textbody, :pubyear, :comment, :is_public, :user_id, :author_id, quote_categories_attributes: [:id, :category_id],
       author_attributes: [:id, :auth_fname, :auth_surname, :birthyear, :deathyear, :biography])
+    end
+
+    # Only allow users to update or delete their own quotes
+    def check_owner
+      unless @quote.user_id == current_user.id
+        flash[:error] = "You are not authorised to do that!"
+        redirect_to root_path
+      end
     end
 end

@@ -10,9 +10,11 @@
     <% if @categorymatch.present? %>
         <h4 style="padding-top: 15px;">Results:</h4>
             <% @categorymatch.each do |quote| %>
-            <h5 class="text-primary">Quote ID: <%= quote.id %></h5>
-            <p><%= quote.textbody %> [<a href="/quotes/<%= quote.id %>">Read full quote</a>]</p>
-            <br />
+                <div class="card bg-body-tertiary" style="margin-bottom:10px">
+                <div class="card-body">
+                <p class="card-text"><%= quote.textbody %><br />[<a href="/quotes/<%= quote.id %>">Details</a>]</p>
+                </div>
+                </div>
             <% end %>
     <% else %>
         <p>No matching quotes found.</p>

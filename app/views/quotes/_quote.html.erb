@@ -1,16 +1,22 @@
 <div id="<%= dom_id quote %>">
+
   <p>
-    <strong>Textbody:</strong>
+    <strong>Owner:</strong>
+    <%= quote.user.fname %>
+  </p>
+
+  <p>
+    <strong>Quote:</strong>
     <%= quote.textbody %>
   </p>
 
   <p>
-    <strong>Pubyear:</strong>
+    <strong>Pubication Year:</strong>
     <%= quote.pubyear %>
   </p>
 
   <p>
-    <strong>Comment:</strong>
+    <strong>Owner Comment:</strong>
     <%= quote.comment %>
   </p>
 
@@ -19,14 +25,38 @@
     <%= quote.is_public %>
   </p>
 
-  <p>
-    <strong>User:</strong>
-    <%= quote.user_id %>
-  </p>
 
-  <p>
-    <strong>Author:</strong>
-    <%= quote.author_id %>
-  </p>
+
+  <% if quote.author.present? %>
+    <div class="author-details">
+      <strong>Author Details:</strong>
+      <dl>
+        <% if quote.author.auth_fname.present? %>
+          <dt>First Name:</dt>
+          <dd><%= quote.author.auth_fname %></dd>
+        <% end %>
+
+        <% if quote.author.auth_surname.present? %>
+          <dt>Surname:</dt>
+          <dd><%= quote.author.auth_surname %></dd>
+        <% end %>
+
+        <% if quote.author.birthyear.present? %>
+          <dt>Birth Year:</dt>
+          <dd><%= quote.author.birthyear %></dd>
+        <% end %>
+
+        <% if quote.author.deathyear.present? %>
+          <dt>Year of Death:</dt>
+          <dd><%= quote.author.deathyear %></dd>
+        <% end %>
+
+        <% if quote.author.biography.present? %>
+          <dt>Biography:</dt>
+          <dd><%= quote.author.biography %></dd>
+        <% end %>
+      </dl>
+    </div>
+  <% end %>
 
 </div>
